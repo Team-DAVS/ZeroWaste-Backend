@@ -1,8 +1,9 @@
 const bcrypt = require("bcrypt")
 
-async function hashPassword(password) {
-    let hashedPassword = await bcrypt.hash(password, 10, function(err, hash) {
-        if (err) { return false} else {return hash}
+function hashPassword(password) {
+    let hashedPassword = bcrypt.hashSync(password, 10, function(err, hash) {
+        console.log(err,hash)
+        if (err) {return false} else {return hash}
     });
     return hashedPassword ? hashedPassword : false
 }
