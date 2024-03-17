@@ -1,0 +1,3 @@
+## Example ENV
+projectURL = 
+supabaseKEY=
