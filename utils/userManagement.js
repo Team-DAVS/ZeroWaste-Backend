@@ -28,7 +28,7 @@ async function checkUser(token) {
     let {data, error} = await db.from("users").select('email').eq("email", decoded.data.email).maybeSingle()
     if (error) return {error, status: 400}
     if (data.email && data.email == decoded.data.email) {
-        return {error: false, isAuthenticated : true}
+        return {error: false, isAuthenticated : true,data: decoded.data}
     } else { return {error: false, isAuthenticated : false}}
     }catch(error) {
         return {error, status: 400}

@@ -1,20 +1,39 @@
 const {Router} = require("express")
 const db = require("../dbConnection")
-const {checkUser} = require("../utils/userManagement")
 const wasteRouter = Router()
 
+/*
+SCHEMA
+id -- auto
+created_at -- auto	
+image -- mandatory
+author -- mandatory
+isAvailable	-boolean, non nullable
+status - nullable
+price - nullable
+boughtBy - nullable
+name -- unique
 
-wasteRouter.use(async (req,res,next)=> {
-    let {authorization} = req.headers
-    if(!authorization) { res.status(401).json("Missing Authorization in Header")}
-    let checkAuth = await checkUser(authorization)
-    console.log(checkAuth)
-    if (!checkAuth.error && checkAuth.isAuthenticated) { next() } else { res.json("Incorrect/Expired Session Token in Headers")}
+*/
+
+
+wasteRouter.get("/", async(req,res)=> {
+    // let {pageId} = {req.}
+    let {data,error} = await db.from("wasteProducts").select('*').eq('isAvailable', true).range(req.query.page ? `${req.query.page}0` : 0, req.query.page ? `${req.query.page+1}0` : 10)
+    if (error) {res.status(404).json(error)}
+    res.json(data)
+
+})
+wasteRouter.get("/:single", async(req,res)=> {
+    let {data,error} = await db.from("wasteProducts").select('*').eq('name', req.params.single).maybeSingle()
+    if (error) {res.status(404).json(error)}
+    if (data) {res.json(data)} else { res.json({})}
 })
 
-wasteRouter.get("/", (req,res)=> {
-    res.json("Thanks")
-
+wasteRouter.post("/", async(req,res)=> {
+    let {image, name, isAvailable} = req.body
+    let {data, error} = await db.from("wasteProducts").insert({name, image, author: req.user.id}).select()
+    if (error) {res.status(404).json(error)} else {res.json(data)}
 })
 
 module.exports = wasteRouter

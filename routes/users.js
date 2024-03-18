@@ -8,7 +8,7 @@ const userRouter = Router()
 userRouter.post("/auth", async (req,res)=> {
     let {email, password} = req.body
     if(!email || !password) {
-        return res.status(404).json("Credentials Missing")
+        res.status(404).json("Credentials Missing")
     }
     let {data, error} = await db.from("users").select().eq("email", email).maybeSingle()
     if(error) res.status(404).json(error)
@@ -26,7 +26,7 @@ userRouter.post("/auth", async (req,res)=> {
 userRouter.post("/new", async (req,res)=>{
     let {email, password, isVendor} = req.body
     if(!email || !password || !isVendor) {
-        return res.status(404).json("Credentials Missing")
+        res.status(404).json("Credentials Missing")
     }
     let hashedPassword = await hashPassword(password)
     let {data,error} = await db.from("users").insert({email, password: hashedPassword, isVendor}).select('id,email,isVendor')
