@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt")
 require('dotenv').config()
+const db = require("../dbConnection")
 const jwt = require("jsonwebtoken")
 
 function hashPassword(password) {
@@ -20,4 +21,18 @@ function createSession(data) {
     return {...data.data, session:sessionToken }
 }
 
-module.exports = {hashPassword, checkPassword, createSession}
+async function checkUser(token) {
+    try {
+    let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if(decoded.expires > new Date(Date.now())) { return {error: "Session Expired", status: 401} }
+    let {data, error} = await db.from("users").select('email').eq("email", decoded.data.email).maybeSingle()
+    if (error) return {error, status: 400}
+    if (data.email && data.email == decoded.data.email) {
+        return {error: false, isAuthenticated : true}
+    } else { return {error: false, isAuthenticated : false}}
+    }catch(error) {
+        return {error, status: 400}
+    }
+}
+
+module.exports = {hashPassword, checkPassword, createSession, checkUser}
