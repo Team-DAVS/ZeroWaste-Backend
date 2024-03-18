@@ -4,10 +4,6 @@ const {checkPassword, hashPassword, createSession} = require("../utils/userManag
 const db = require("../dbConnection")
 const userRouter = Router()
 
-userRouter.get("/", (req,res)=> {
-
-    res.json("Configured")
-})
 
 userRouter.post("/auth", async (req,res)=> {
     let {email, password} = req.body
