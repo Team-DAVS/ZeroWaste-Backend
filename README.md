@@ -22,8 +22,9 @@ Here's how it works:
 You will have to set up Supabase project to get following api keys. Paste it in `.env.local` in root directory.
 
 ```
-projectURL= <value> 
-supabaseKEY= <value> 
+project_URL= <value> 
+supabase_KEY= <value> 
+JWT_SECRET=<value>
 ```
 
 You can retrieve the above environment values by referring to their documentation. Once retrieved, paste them accordingly as mentioned above.

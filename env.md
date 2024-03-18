@@ -1,3 +1,4 @@
 ## Example ENV
-projectURL = 
-supabaseKEY=
+project_URL = 
+supabase_KEY=
+JWT_SECRET=
